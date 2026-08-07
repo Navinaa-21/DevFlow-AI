@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevFlow AI - Modern dark SaaS application shell with a clean Vercel/Linear-inspired interface.">
+    <title>DevFlow AI</title>
+    <link rel="stylesheet" href="style.css?v=12">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-container" style="display: none; height: 100vh; align-items: center; justify-content: center; flex-direction: column; background: var(--bg-primary);">
+        <div class="logo-container" style="margin-bottom: 2rem;">
+            <div class="logo-icon" style="width: 48px; height: 48px; font-size: 20px;">DF</div>
+            <span class="logo-text" style="font-size: 24px;">DevFlow AI</span>
+        </div>
+        <div class="card" style="width: 100%; max-width: 400px; text-align: center; padding: 2rem;">
+            <h2 style="margin-bottom: 1rem;">Welcome Back</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Sign in to connect your repositories and manage AI workflows.</p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;" onclick="window.Auth.login()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                Continue with GitHub
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-container" class="app-layout" style="display: none;">
+        <!-- Fixed Left Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="logo-container">
+                    <div class="logo-icon">DF</div>
+                    <span class="logo-text">DevFlow AI</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-view="dashboard" id="nav-dashboard">
+                    <!-- Home Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a class="nav-item" data-view="repositories" id="nav-repositories">
+                    <!-- Folder/Repo Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-19.5 0A2.25 2.25 0 0 0 4.5 15h15a2.25 2.25 0 0 0 2.25-2.25m-19.5 0v.158c0 .871.447 1.682 1.185 2.137l2.223 1.334A2.25 2.25 0 0 0 6.438 18h11.124a2.25 2.25 0 0 0 1.28-2.529l-2.223-1.334A2.246 2.246 0 0 0 15 15h-1.5a2.25 2.25 0 0 1-2.25-2.25V12" />
+                    </svg>
+                    <span>Repositories</span>
+                </a>
+                <a class="nav-item" data-view="activity" id="nav-activity">
+                    <!-- Activity Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                    </svg>
+                    <span>Activity</span>
+                </a>
+                <a class="nav-item" data-view="documentation" id="nav-documentation">
+                    <!-- Document Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                    </svg>
+                    <span>Documentation</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile" id="user-profile-btn" style="cursor: pointer;" onclick="window.Auth.logout()" title="Click to Logout">
+                    <div class="avatar" id="sidebar-avatar">U</div>
+                    <div class="user-info">
+                        <span class="user-name" id="sidebar-name">User Account</span>
+                        <span class="user-email" id="sidebar-email">user@devflow.ai</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-area">
+            <!-- Top Navigation Bar -->
+            <header class="navbar">
+                <div class="navbar-left">
+                    <span class="page-title" id="navbar-view-title">Dashboard</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <div class="project-badge">
+                        <div class="project-status"></div>
+                        <span>main-branch</span>
+                    </div>
+                </div>
+                
+                <div class="navbar-right">
+                    <div class="search-container">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
+                        </svg>
+                        <input type="text" class="search-input" id="global-search" placeholder="Search components...">
+                        <kbd class="kbd-shortcut">⌘K</kbd>
+                    </div>
+                    
+                    <button class="nav-action-btn" title="Notifications" id="btn-notifications">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                        </svg>
+                    </button>
+                    
+                    <button class="nav-action-btn" title="Settings" id="btn-settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.645-.869L9.594 3.94ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content Viewport -->
+            <div class="content-viewport">
+                
+                <!-- DASHBOARD VIEW -->
+                <section class="view-section active" id="view-dashboard">
+                    <div>
+                        <h2>Overview</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 24px;">Welcome back. Here is the active status of your AI code pipelines.</p>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <!-- KPI Cards -->
+                        <div class="card col-3">
+                            <div class="card-header-flex">
+                                <span class="card-title">Connected Repositories</span>
+                            </div>
+                            <div class="card-value" id="kpi-repos">12</div>
+                            <div class="card-desc"><span class="text-success">▲ 2 new</span> this week</div>
+                        </div>
+                        
+                        <div class="card col-3">
+                            <div class="card-header-flex">
+                                <span class="card-title">AI Jobs Processed</span>
+                            </div>
+                            <div class="card-value" id="kpi-jobs">142</div>
+                            <div class="card-desc">Across all codebases</div>
+                        </div>
+                        
+                        <div class="card col-3">
+                            <div class="card-header-flex">
+                                <span class="card-title">Documentation Generated</span>
+                            </div>
+                            <div class="card-value" id="kpi-docs">48</div>
+                            <div class="card-desc">Pages up-to-date</div>
+                        </div>
+                        
+                        <div class="card col-3">
+                            <div class="card-header-flex">
+                                <span class="card-title">Active Processing</span>
+                            </div>
+                            <div class="card-value" id="kpi-active">3</div>
+                            <div class="card-desc">AI agents running</div>
+                        </div>
+                        
+                        <!-- Recent Activity Section -->
+                        <div class="card col-6">
+                            <div class="card-header-flex">
+                                <span class="card-title">Recent Activity</span>
+                                <button class="btn-secondary" style="font-size: 11px; padding: 4px 8px;" id="dashboard-to-activity">View All</button>
+                            </div>
+                            <div class="list-container" id="dashboard-activity-list">
+                                <!-- Loaded dynamically via app.js -->
+                            </div>
+                        </div>
+                        
+                        <!-- Repository Overview Section -->
+                        <div class="card col-6">
+                            <div class="card-header-flex">
+                                <span class="card-title">Repository Overview</span>
+                                <button class="btn-secondary" style="font-size: 11px; padding: 4px 8px;" id="dashboard-to-repos">Manage All</button>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" id="dashboard-repos-grid">
+                                <!-- Loaded dynamically via app.js -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- REPOSITORIES VIEW -->
+                <section class="view-section" id="view-repositories">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <div>
+                            <h2>Repositories</h2>
+                            <p style="color: var(--text-secondary);">Manage and monitor code repositories connected to DevFlow AI.</p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 12px; margin-top: 16px;">Connected Repositories</h3>
+                    <div class="list-container" id="repositories-list-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+
+                    <h3 style="margin-bottom: 12px; margin-top: 32px;">Available GitHub Repositories</h3>
+                    <div class="list-container" id="github-repositories-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </section>
+                
+                <!-- ACTIVITY VIEW -->
+                <section class="view-section" id="view-activity">
+                    <div style="margin-bottom: 24px;">
+                        <h2>Activity Pipeline</h2>
+                        <p style="color: var(--text-secondary);">Real-time logs, commit hooks, and AI analysis pipelines.</p>
+                    </div>
+                    
+                    <div class="list-container" id="activity-list-container">
+                        <!-- Loaded dynamically via app.js -->
+                    </div>
+                </section>
+                
+                <!-- DOCUMENTATION VIEW -->
+                <section class="view-section" id="view-documentation">
+                    <div class="docs-layout">
+                        <!-- Left Column: Table of Contents -->
+                        <aside class="docs-toc">
+                            <span class="docs-toc-title">Getting Started</span>
+                            <a class="docs-toc-link active" data-doc="intro" id="doc-toc-intro">Introduction</a>
+                            <a class="docs-toc-link" data-doc="quickstart" id="doc-toc-quickstart">Quickstart Guide</a>
+                            <a class="docs-toc-link" data-doc="webhooks" id="doc-toc-webhooks">Webhook Integration</a>
+                            <a class="docs-toc-link" data-doc="api" id="doc-toc-api">API Reference</a>
+                        </aside>
+                        
+                        <!-- Middle Column: Markdown Preview Body -->
+                        <div class="docs-body" id="docs-body-viewport">
+                            <!-- Content loaded dynamically via app.js -->
+                        </div>
+
+                        <!-- Right Column: Document Metadata Panel -->
+                        <aside class="docs-metadata">
+                            <div class="docs-meta-section">
+                                <span class="docs-meta-label">Document ID</span>
+                                <span class="docs-meta-value" id="doc-meta-id">intro_doc_01</span>
+                            </div>
+                            <div class="docs-meta-section">
+                                <span class="docs-meta-label">Last Updated</span>
+                                <span class="docs-meta-value" id="doc-meta-updated">2 hours ago</span>
+                            </div>
+                            <div class="docs-meta-section">
+                                <span class="docs-meta-label">Author / Maintainer</span>
+                                <span class="docs-meta-value" id="doc-meta-author">AI Pipeline System</span>
+                            </div>
+                            <div class="docs-meta-section">
+                                <span class="docs-meta-label">Estimated Read Time</span>
+                                <span class="docs-meta-value" id="doc-meta-readtime">3 mins read</span>
+                            </div>
+                            <div class="docs-meta-section">
+                                <span class="docs-meta-label">AI Review Status</span>
+                                <span class="status-chip status-verified">Verified Auto-doc</span>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+
+                
+                <!-- REPOSITORY DETAILS VIEW -->
+                <section class="view-section" id="view-repo-details">
+                    <div style="margin-bottom: 24px;">
+                        <button class="btn-secondary" id="btn-back-to-repos" style="margin-bottom: 16px; display: inline-flex; align-items: center; gap: 8px;">
+                            ← Back to Repositories
+                        </button>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h2 id="repo-details-title">Repository Name</h2>
+                                <p id="repo-details-subtitle" style="color: var(--text-secondary);">Language • Status • Updated info</p>
+                            </div>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn-secondary" id="btn-repo-settings">Repo Settings</button>
+                                <button class="btn-primary" id="btn-trigger-ai-run">Trigger AI Run</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repository Metadata Cards Grid -->
+                    <div class="dashboard-grid" style="margin-bottom: 32px;">
+                        <div class="card col-4">
+                            <div class="card-title" style="margin-bottom: 8px;">Branch Info</div>
+                            <div style="font-weight: 600; font-size: 16px;" id="repo-meta-branch">main</div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin-top: 4px;">Default branch tracked</div>
+                        </div>
+                        <div class="card col-4">
+                            <div class="card-title" style="margin-bottom: 8px;">AI Processing Status</div>
+                            <div style="margin-top: 4px;">
+                                <span class="status-chip status-active" id="repo-meta-status-chip">Active</span>
+                            </div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin-top: 8px;">All hooks functioning</div>
+                        </div>
+                        <div class="card col-4">
+                            <div class="card-title" style="margin-bottom: 8px;">Webhooks Connected</div>
+                            <div style="font-weight: 600; font-size: 16px;">Enabled</div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin-top: 4px;">Receiving GitHub webhooks</div>
+                        </div>
+                    </div>
+
+                    <!-- Commits Table -->
+                    <div class="card col-12" style="padding: 0; overflow: hidden;">
+                        <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 16px; font-weight: 600;">Recent Commits</h3>
+                            <span style="font-size: 12px; color: var(--text-secondary);" id="commits-count">Showing 0 commits</span>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="commits-table">
+                                <thead>
+                                    <tr>
+                                        <th>Commit Hash</th>
+                                        <th>Message</th>
+                                        <th>Author</th>
+                                        <th>Timestamp</th>
+                                        <th>AI Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="commits-table-body">
+                                    <!-- Populated dynamically via app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COMMIT DETAILS VIEW -->
+                <section class="view-section" id="view-commit-details">
+                    <div style="margin-bottom: 24px;">
+                        <button class="btn-secondary" id="btn-back-to-repo-details" style="margin-bottom: 16px; display: inline-flex; align-items: center; gap: 8px;">
+                            ← Back to Repository Details
+                        </button>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <span class="commit-hash" id="commit-details-hash" style="font-size: 13px; padding: 4px 8px;">hash</span>
+                                    <span class="project-badge" id="commit-details-status-badge">
+                                        <span class="project-status" id="commit-details-status-dot"></span>
+                                        <span id="commit-details-status-text">Success</span>
+                                    </span>
+                                </div>
+                                <h2 id="commit-details-message" style="font-size: 20px; font-weight: 600; margin-bottom: 4px;">Commit Message</h2>
+                                <p id="commit-details-meta" style="color: var(--text-secondary); font-size: 13px;">Authored by Author Name • 2 hours ago</p>
+                            </div>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn-secondary" id="btn-regenerate-docs">Regenerate Documentation</button>
+                                <button class="btn-primary" id="btn-view-docs">View Documentation</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <!-- AI analysis stats -->
+                        <div class="card col-4">
+                            <div class="card-title" style="margin-bottom: 8px;">Security Impact</div>
+                            <div style="font-weight: 600; font-size: 16px; color: #10b981;">No Flaws Identified</div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin-top: 4px;">Verified by secure audit agent</div>
+                        </div>
+                        <div class="card col-4">
+                            <div class="card-title" style="margin-bottom: 8px;">Code Coverage</div>
+                            <div style="font-weight: 600; font-size: 16px;">94.2%</div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin-top: 4px;">Unchanged across 4 modules</div>
+                        </div>
+                        <div class="card col-4">
+                            <div class="card-title" style="margin-bottom: 8px;">Build Execution</div>
+                            <div style="font-weight: 600; font-size: 16px; color: #10b981;">Passed</div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin-top: 4px;">Executed in 42 seconds</div>
+                        </div>
+
+                        <!-- Changed Files Card -->
+                        <div class="card col-6">
+                            <div class="card-header-flex" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                                <span class="card-title">Changed Files</span>
+                                <span id="commit-changed-files-count" style="font-size: 12px; color: var(--text-secondary);">3 files</span>
+                            </div>
+                            <div class="list-container" id="commit-changed-files-list">
+                                <!-- Loaded dynamically via app.js -->
+                            </div>
+                        </div>
+
+                        <!-- AI Generated Summary Card -->
+                        <div class="card col-6">
+                            <div class="card-header-flex" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                                <span class="card-title">AI Generated Summary</span>
+                                <span style="font-size: 11px; background-color: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; color: var(--text-secondary);">AI Model v2.4</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 16px;">
+                                <div>
+                                    <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-primary);">Changes Overview</h4>
+                                    <p id="commit-ai-overview" style="color: var(--text-secondary); font-size: 13px; line-height: 1.6;">Overview details...</p>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-primary);">Architecture Impact</h4>
+                                    <p id="commit-ai-impact" style="color: var(--text-secondary); font-size: 13px; line-height: 1.6;">Impact details...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                
+            </div>
+        </main>
+    </div>
+    
+    <!-- Add Repository Modal -->
+    <div class="modal-overlay" id="add-repo-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Repository</h3>
+                <button class="modal-close" id="btn-close-repo-modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-repo-form">
+                    <div class="form-group">
+                        <label class="form-label" for="repo-name">Repository Name</label>
+                        <input type="text" id="repo-name" class="form-input" placeholder="e.g., ai-pipeline-mvp" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="repo-owner">Owner (Username or Org)</label>
+                        <input type="text" id="repo-owner" class="form-input" placeholder="e.g., your-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="repo-url">Clone URL</label>
+                        <input type="url" id="repo-url" class="form-input" placeholder="https://github.com/..." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="repo-branch">Default Branch</label>
+                        <input type="text" id="repo-branch" class="form-input" value="main" required>
+                    </div>
+                    <div class="form-checkbox-group">
+                        <input type="checkbox" id="repo-webhook" checked>
+                        <label for="repo-webhook">Enable GitHub Webhooks</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-cancel-repo-modal">Cancel</button>
+                <button class="btn-primary" id="btn-submit-repo-modal">Add Repository</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="auth.js?v=12"></script>
+    <script src="api.js?v=12"></script>
+    <script src="app.js?v=12"></script>
+</body>
+</html>

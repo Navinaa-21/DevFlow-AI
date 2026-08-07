@@ -1,0 +1,42 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python Cache & Testing
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nosexy
+
+# Configuration & Secrets
+.env
+.env.*
+!.env.example
+
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+
+# Large Binaries / executables
+cloudflared.exe
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS Files
+.DS_Store
+Thumbs.db
