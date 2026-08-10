@@ -15,7 +15,14 @@ async def github_login(request: Request):
     """
     Redirects the user to the GitHub OAuth login page.
     """
-    redirect_uri = f"{settings.FRONTEND_URL}/api/v1/auth/github/callback"
+    # If accessing via 127.0.0.1, redirect to localhost so that the session cookie matches
+    # the registered GitHub OAuth callback domain (localhost:8000)
+    if "127.0.0.1" in str(request.base_url):
+        new_url = str(request.url).replace("127.0.0.1", "localhost")
+        return RedirectResponse(url=new_url)
+
+    base_url = str(request.base_url).rstrip('/')
+    redirect_uri = f"{base_url}/api/v1/auth/github/callback"
     return await oauth.github.authorize_redirect(request, redirect_uri)
 
 @router.get("/github/callback")
@@ -59,7 +66,8 @@ async def github_callback(request: Request, db: Session = Depends(get_db)):
     jwt_token = create_access_token(subject=str(user.id))
 
     # Redirect to frontend with token
-    redirect_url = f"{settings.FRONTEND_URL}/?token={jwt_token}"
+    base_url = str(request.base_url).rstrip('/')
+    redirect_url = f"{base_url}/?token={jwt_token}"
     return RedirectResponse(url=redirect_url)
 
 @router.get("/me", response_model=UserResponse)
