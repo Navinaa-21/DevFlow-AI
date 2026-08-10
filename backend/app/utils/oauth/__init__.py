@@ -13,5 +13,5 @@ if settings.GITHUB_CLIENT_ID and settings.GITHUB_CLIENT_SECRET:
         authorize_url='https://github.com/login/oauth/authorize',
         authorize_params=None,
         api_base_url='https://api.github.com/',
-        client_kwargs={'scope': 'user:email read:user'},
+        client_kwargs={'scope': 'user:email read:user repo'},
     )
