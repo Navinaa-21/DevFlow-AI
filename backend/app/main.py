@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -23,7 +23,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.add_middleware(SessionMiddleware, secret_key=settings.SESSION_SECRET_KEY)
+# Configure Starlette SessionMiddleware with secure cookies for production
+app.add_middleware(
+    SessionMiddleware, 
+    secret_key=settings.SESSION_SECRET_KEY,
+    https_only=not settings.DEBUG,
+    same_site="lax"
+)
+
+# Custom ASGI middleware to correctly detect HTTPS scheme behind reverse proxies (like Render)
+class ProxyHeadersMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] in ("http", "websocket"):
+            for header_name, header_value in scope.get("headers", []):
+                if header_name == b"x-forwarded-proto":
+                    scope["scheme"] = header_value.decode("latin1")
+                    break
+        await self.app(scope, receive, send)
+
+app.add_middleware(ProxyHeadersMiddleware)
+
+# Temporary debug middleware to log OAuth-related session and cookie lifecycle
+@app.middleware("http")
+async def oauth_debug_middleware(request: Request, call_next):
+    if "auth/github" in request.url.path:
+        print(f"OAUTH_DEBUG [START]: Path: {request.url.path} | Scheme: {request.scope.get('scheme')} | Base_URL: {request.base_url}")
+        print(f"OAUTH_DEBUG [HEADERS]: {dict(request.headers)}")
+        print(f"OAUTH_DEBUG [COOKIES]: {request.cookies}")
+        
+        if hasattr(request, "session"):
+            print(f"OAUTH_DEBUG [SESSION BEFORE]: {dict(request.session)}")
+        
+        response = await call_next(request)
+        
+        print(f"OAUTH_DEBUG [RESPONSE STATUS]: {response.status_code}")
+        print(f"OAUTH_DEBUG [RESPONSE HEADERS]: {dict(response.headers)}")
+        if hasattr(request, "session"):
+            print(f"OAUTH_DEBUG [SESSION AFTER]: {dict(request.session)}")
+        return response
+    return await call_next(request)
 
 from app.api.webhook import router as webhook_router
 app.include_router(webhook_router)
