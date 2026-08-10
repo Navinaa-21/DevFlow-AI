@@ -50,19 +50,19 @@ app.add_middleware(ProxyHeadersMiddleware)
 @app.middleware("http")
 async def oauth_debug_middleware(request: Request, call_next):
     if "auth/github" in request.url.path:
-        print(f"OAUTH_DEBUG [START]: Path: {request.url.path} | Scheme: {request.scope.get('scheme')} | Base_URL: {request.base_url}")
-        print(f"OAUTH_DEBUG [HEADERS]: {dict(request.headers)}")
-        print(f"OAUTH_DEBUG [COOKIES]: {request.cookies}")
+        print(f"OAUTH_DEBUG [START]: Path: {request.url.path} | Scheme: {request.scope.get('scheme')} | Base_URL: {request.base_url}", flush=True)
+        print(f"OAUTH_DEBUG [HEADERS]: {dict(request.headers)}", flush=True)
+        print(f"OAUTH_DEBUG [COOKIES]: {request.cookies}", flush=True)
         
         if hasattr(request, "session"):
-            print(f"OAUTH_DEBUG [SESSION BEFORE]: {dict(request.session)}")
+            print(f"OAUTH_DEBUG [SESSION BEFORE]: {dict(request.session)}", flush=True)
         
         response = await call_next(request)
         
-        print(f"OAUTH_DEBUG [RESPONSE STATUS]: {response.status_code}")
-        print(f"OAUTH_DEBUG [RESPONSE HEADERS]: {dict(response.headers)}")
+        print(f"OAUTH_DEBUG [RESPONSE STATUS]: {response.status_code}", flush=True)
+        print(f"OAUTH_DEBUG [RESPONSE HEADERS]: {dict(response.headers)}", flush=True)
         if hasattr(request, "session"):
-            print(f"OAUTH_DEBUG [SESSION AFTER]: {dict(request.session)}")
+            print(f"OAUTH_DEBUG [SESSION AFTER]: {dict(request.session)}", flush=True)
         return response
     return await call_next(request)
 
