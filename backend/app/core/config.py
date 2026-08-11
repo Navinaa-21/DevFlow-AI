@@ -30,9 +30,10 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     FRONTEND_URL: str = "http://localhost:8000"
 
-    # GitHub OAuth
+    # GitHub OAuth & Encryption
     GITHUB_CLIENT_ID: Optional[str] = None
     GITHUB_CLIENT_SECRET: Optional[str] = None
+    OAUTH_TOKEN_ENCRYPTION_KEY: Optional[str] = None
 
     # GitHub Webhook
     GITHUB_WEBHOOK_SECRET: str = "change_me"

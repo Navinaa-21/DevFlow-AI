@@ -3,6 +3,7 @@ from typing import Optional, List
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.models.oauth_account import OAuthAccount
+from app.core.security_encryption import get_encryption_service
 
 class AuthRepository:
     """
@@ -10,6 +11,7 @@ class AuthRepository:
     """
     def __init__(self, db: Session) -> None:
         self.db = db
+        self.encryption_service = get_encryption_service()
 
     # User operations
     def get_user_by_email(self, email: str) -> Optional[User]:
@@ -57,12 +59,15 @@ class AuthRepository:
         access_token: str, 
         refresh_token: Optional[str] = None
     ) -> OAuthAccount:
+        encrypted_access_token = self.encryption_service.encrypt_token(access_token)
+        encrypted_refresh_token = self.encryption_service.encrypt_token(refresh_token) if refresh_token else None
+        
         oauth_account = OAuthAccount(
             user_id=user_id,
             provider=provider,
             provider_account_id=provider_account_id,
-            access_token=access_token,
-            refresh_token=refresh_token
+            access_token=encrypted_access_token,
+            refresh_token=encrypted_refresh_token
         )
         self.db.add(oauth_account)
         self.db.commit()
@@ -74,6 +79,11 @@ class AuthRepository:
         if not account:
             raise ValueError(f"OAuthAccount with ID {account_id} not found.")
 
+        if "access_token" in kwargs and kwargs["access_token"]:
+            kwargs["access_token"] = self.encryption_service.encrypt_token(kwargs["access_token"])
+        if "refresh_token" in kwargs and kwargs["refresh_token"]:
+            kwargs["refresh_token"] = self.encryption_service.encrypt_token(kwargs["refresh_token"])
+
         for key, value in kwargs.items():
             if hasattr(account, key):
                 setattr(account, key, value)
@@ -81,3 +91,4 @@ class AuthRepository:
         self.db.commit()
         self.db.refresh(account)
         return account
+

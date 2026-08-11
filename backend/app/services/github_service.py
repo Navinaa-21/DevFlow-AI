@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 from app.core.config import settings
 
+from app.core.security_encryption import get_encryption_service
+
 class GithubService:
     """
     Service responsible for communicating directly with the GitHub API
@@ -13,13 +15,15 @@ class GithubService:
     def __init__(self, db: Session, user: User):
         self.db = db
         self.user = user
+        self.encryption_service = get_encryption_service()
         self.access_token = self._get_access_token()
         self.base_url = "https://api.github.com"
         
     def _get_access_token(self) -> str:
         for account in self.user.oauth_accounts:
             if account.provider == "github":
-                return account.access_token
+                # Transparently decrypt stored access_token
+                return self.encryption_service.decrypt_token(account.access_token)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="No GitHub account linked."
