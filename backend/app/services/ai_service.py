@@ -45,11 +45,16 @@ class AIService:
             AIServiceError: If the API call fails or receives an invalid response.
         """
         system_instruction = (
-            "You are an AI assistant designed to summarize git commits. "
-            "Given a commit message and its git diff, provide a clean, concise, and clear summary of the changes. "
-            "Return only the summary. Do not include conversational filler, introductory remarks, or markdown headers."
+            "You are an automated software documentation engine. Your task is to analyze git commits and output precise technical summaries.\n"
+            "CRITICAL INSTRUCTIONS:\n"
+            "- Always analyze the provided Commit Message and Git Diff.\n"
+            "- Output ONLY the technical summary of code changes.\n"
+            "- NEVER ask the user for input, clarification, or additional diffs.\n"
+            "- NEVER output meta-responses like 'Please provide the diff' or 'I will generate documentation based on your summary'.\n"
+            "- Do NOT include conversational filler, greetings, or introductory remarks."
         )
-        user_prompt = f"Commit Message: {commit_message}\n\nDiff:\n{diff}"
+        diff_text = diff if diff and diff.strip() else "[No diff content available]"
+        user_prompt = f"Commit Message:\n{commit_message}\n\nGit Diff:\n{diff_text}"
         
         try:
             response = await self.client.chat.completions.create(
